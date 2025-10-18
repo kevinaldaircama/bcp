@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+  <title>Ingresar Token</title>  
+
+  <!-- Iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">  
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />  
+  <meta name="theme-color" content="#720e9e" />  
+  <link rel="icon" type="image/png" href="imagen/app_icon_xxxhdpi.png">     
+
+  <!-- CSS externo -->
+  <link rel="stylesheet" href="cc/index.css">
+</head>
+<body>
+  <div class="container">  
+    <h2><i class="fa-solid fa-shield-alt"></i> Acceso Seguro</h2>  
+
+    <div class="input-group">  
+      <i class="fa-solid fa-key"></i>  
+      <input type="text" id="token" placeholder="Introduce tu token">  
+    </div>  
+
+    <button class="btn btn-primary" onclick="checkToken()">  
+      <i class="fa-solid fa-right-to-bracket"></i> Ingresar  
+    </button>  
+
+    <button class="btn btn-secondary" onclick="window.location.href='planes'">  
+      <i class="fa-solid fa-user-plus"></i> Solicitar Cuenta  
+    </button>  
+  </div>  
+
+  <!-- JS externo -->
+  <script type="module" src="app/index.js"></script>
+</body>
+</html>
