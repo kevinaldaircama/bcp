@@ -4,7 +4,7 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#720e9e",
-  "theme_color": "#0003ff",
+  "theme_color": "#01256f",
   "orientation": "portrait",
   "icons": [
     {
@@ -14,7 +14,7 @@
     },
     {
       "src": "images/app_icon_xxxhdpi.png",
-      "sizes": "512x512",
+      "sizes": "01256f",
       "type": "images/png"
     }
   ]
