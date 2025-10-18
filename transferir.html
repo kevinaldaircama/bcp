@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Transferir dinero</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+  body{background:#fff;color:#222;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+  header{background:#fff;text-align:center;padding:16px 0;font-weight:600;font-size:17px;box-shadow:0 1px 3px rgba(0,0,0,0.1);position:relative;}
+  header button{position:absolute;left:15px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;}
+  header button img{width:22px;height:22px;}
+  main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;padding:50px 20px 100px;}
+  input{width:100%;max-width:380px;padding:14px 16px;border:1.5px solid #ccc;border-radius:10px;font-size:15px;outline:none;text-align:center;}
+  input:focus{border-color:#0033a0;}
+  .bottom-area{position:fixed;bottom:25px;left:0;right:0;display:flex;justify-content:center;}
+  .btn-continuar{width:80%;max-width:380px;background:#ccc;color:#fff;border:none;border-radius:30px;padding:14px;font-size:16px;font-weight:600;cursor:not-allowed;transition:0.3s;}
+  .btn-continuar.activo{background:#ff6600;cursor:pointer;}
+  .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;visibility:hidden;opacity:0;transition:0.3s;}
+  .modal.show{visibility:visible;opacity:1;}
+  .circle-loader{width:100px;height:100px;border:6px solid rgba(255,255,255,0.3);border-top:6px solid #ff6600;border-radius:50%;animation:rotate 1s linear infinite;display:flex;align-items:center;justify-content:center;}
+.circle-loader-wrapper {
+  width: 100px;
+  height: 100px;
+  position: relative;
+}
+
+.circle-loader {
+  width: 100px;
+  height: 100px;
+  border: 6px solid rgba(255,255,255,0.3);
+  border-top: 6px solid #ff6600;
+  border-radius: 50%;
+  animation: rotate 1s linear infinite; /* Solo el círculo gira */
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.circle-logo {
+  width: 45px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centrar el logo */
+  animation: none; /* Logo no gira */
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <button onclick="history.back()"><img src="images/atras.svg" alt="Volver"></button>
+  Transferir dinero
+</header>
+
+<main>
+  <input type="text" id="cuenta" placeholder="Ingresa cuenta BCP o Interbancario">
+</main>
+
+<div class="bottom-area">
+  <button class="btn-continuar" id="btnContinuar" disabled>Continuar</button>
+</div>
+
+<!-- MODAL DE CARGA -->
+<div class="modal" id="modalCargando">
+  <div class="circle-loader-wrapper">
+    <div class="circle-loader"></div>
+    <img src="images/lg_favicon_light.svg" alt="Logo" class="circle-logo">
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDvfMTYu_d_Vl0z-3Y8ld_YtcFLGgZmP0U",
+    authDomain: "bcpf-e0a42.firebaseapp.com",
+    databaseURL: "https://bcpf-e0a42-default-rtdb.firebaseio.com",
+    projectId: "bcpf-e0a42",
+    storageBucket: "bcpf-e0a42.firebasestorage.app",
+    messagingSenderId: "1030005921701",
+    appId: "1:1030005921701:web:0c15124cadf030280f7a4c"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  const input = document.getElementById("cuenta");
+  const boton = document.getElementById("btnContinuar");
+  const modalCargando = document.getElementById("modalCargando");
+
+  input.addEventListener("input", () => {
+    if (input.value.trim().length > 0) {
+      boton.classList.add("activo");
+      boton.disabled = false;
+    } else {
+      boton.classList.remove("activo");
+      boton.disabled = true;
+    }
+  });
+
+  boton.addEventListener("click", async () => {
+    const numero = input.value.trim();
+    if (!numero) return;
+
+    modalCargando.classList.add("show");
+
+    setTimeout(async () => {
+      modalCargando.classList.remove("show");
+
+      const snapshot = await get(child(ref(db), "cuentas"));
+      let encontrado = false, nombre = "", cuenta = "";
+
+      snapshot.forEach((childSnap) => {
+        const data = childSnap.val();
+        if (data.numero === numero) {
+          encontrado = true;
+          nombre = data.nombre;
+          cuenta = data.numero;
+        }
+      });
+
+      if (encontrado) {
+        // Guardamos los datos y redirigimos pru.html
+        localStorage.setItem("nombre", nombre);
+        localStorage.setItem("numero", cuenta);
+        window.location.href = "pru";
+      } else {
+        alert("❌ Cuenta no encontrada. Verifica el número ingresado.");
+      }
+    }, 2000);
+  });
+</script>
+</body>
+</html>

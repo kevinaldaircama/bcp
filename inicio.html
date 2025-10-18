@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Inicio - Banca Móvil BCP</title>
+<link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0003ff" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="images/png" href="images/app_icon_xxxhdpi.png"> 
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+  body { background-color: #f4f6fa; color: #00246f; min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* ====== HEADER ====== */
+  header {
+    background-color: #0033a0;
+    color: white;
+    padding: 40px 20px 25px;
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .top-bar { display: flex; justify-content: space-between; align-items: center; }
+  .top-bar img { width: 72px; }
+  .icons { display: flex; gap: 18px; }
+  .icons img { width: 26px; height: 26px; filter: brightness(0) invert(1); cursor: pointer; }
+  .welcome { margin-top: 15px; }
+  .welcome h2 { font-size: 22px; font-weight: 400; }
+  .welcome span { font-weight: 700; }
+
+  /* ====== PRODUCTOS ====== */
+  .productos {
+    background-color: #fff;
+    border-radius: 15px;
+    margin: -20px auto 20px;
+    width: 93%;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  }
+  .productos h3 { color: #0033a0; font-size: 17px; margin-bottom: 14px; }
+  .producto-header { display: flex; justify-content: space-between; align-items: center; }
+  .producto-header-icons { display: flex; align-items: center; gap: 10px; }
+  .producto-header-icons img { width: 22px; height: 22px; cursor: pointer; transition: opacity 0.3s ease; }
+
+  .producto-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 0; border-top: 1px solid #eee;
+  }
+  .producto-info { display: flex; align-items: center; gap: 8px; }
+  .producto-info img { width: 22px; height: 22px; }
+  .producto-info p { font-size: 15px; color: #00246f; }
+  .producto-right { display: flex; align-items: center; gap: 6px; }
+  .producto-monto { font-size: 15px; color: #222; transition: 0.3s ease; }
+  .producto-right img { width: 14px; height: 14px; cursor: pointer; }
+  .ver-todos { text-align: center; margin: 12px 0 4px; color: #ff6600; font-weight: 500; cursor: pointer; }
+
+  /* ====== ACCIONES ====== */
+  .acciones {
+    display: flex; justify-content: space-around;
+    padding: 14px 10px; background-color: #fff;
+    border-radius: 15px; margin: 0 auto 20px; width: 93%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+  .acciones div { text-align: center; width: 22%; }
+  .acciones img {
+    width: 48px; height: 48px;
+    background-color: #ff6600; border-radius: 50%;
+    padding: 9px; margin-bottom: 6px;
+  }
+  .acciones p { font-size: 12.5px; color: #00246f; line-height: 1.2em; }
+
+  /* ====== SECCIONES ====== */
+  .seccion { width: 93%; margin: 0 auto 90px; }
+  .seccion h3 { font-size: 16px; color: #0033a0; margin-bottom: 12px; }
+  .cards { display: flex; overflow-x: auto; gap: 12px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+
+  .card {
+    min-width: 190px;
+    background-color: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    scroll-snap-align: start;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    gap: 10px;
+  }
+
+  /* logo a la izquierda */
+  .card img.logo {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    align-self: flex-start;
+  }
+
+  .card-content { text-align: left; }
+  .card-content h4 { font-size: 14px; color: #00246f; margin-bottom: 5px; }
+  .card-content p { font-size: 12.5px; color: #444; }
+
+  /* ====== DOTS ====== */
+  .dots { text-align: center; margin-top: 8px; }
+  .dots span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: #ddd;
+    border-radius: 50%;
+    margin: 0 4px;
+    transition: background-color 0.3s;
+  }
+  .dots span.active { background-color: #ff6600; }
+
+  /* ====== PROMOCIONES - SLIDER ===== */
+  .promo-slider {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px;
+  }
+
+  .promo-slide {
+    flex: 0 0 100%;
+    max-width: 100%;
+    scroll-snap-align: start;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+
+  .promo-slide .promo-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .promo-slide .promo-content {
+    padding: 14px;
+  }
+
+  .promo-slide .promo-title {
+    font-size: 16px;
+    color: #0033a0;
+    margin-bottom: 6px;
+  }
+
+  .promo-slide .promo-desc {
+    font-size: 13px;
+    color: #444;
+    line-height: 1.4;
+  }
+
+  .promo-dots { text-align: center; margin-top: 10px; }
+  .promo-dots span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: #ddd;
+    border-radius: 50%;
+    margin: 0 5px;
+    transition: background-color 0.25s;
+    cursor: pointer;
+  }
+  .promo-dots span.active { background-color: #ff6600; }
+
+  /* ====== MENÚ ====== */
+  .menu {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background-color: #fff; display: flex; justify-content: space-around;
+    padding: 8px 0; border-top: 1px solid #ddd;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+  }
+  .menu div { text-align: center; }
+  .menu img { width: 26px; height: 26px; }
+  .menu p { font-size: 12px; margin-top: 3px; color: #0033a0; }
+  .activo img { filter: hue-rotate(330deg); }
+  .activo p { color: #ff6600; font-weight: 600; }
+
+  /* pequeños ajustes responsivos */
+  @media (min-width: 600px) {
+    .promo-slide { flex: 0 0 48%; }
+    .promo-slider { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="top-bar">
+    <img src="images/logo.svg" alt="BCP">
+    <div class="icons">
+      <img src="images/preguntas-icon.svg" alt="?">
+      <img src="images/campana-icon.svg" alt="notificaciones">
+    </div>
+  </div>
+  <div class="welcome">
+    <h2>Hola, <span id="nombreUsuario">Usuario</span></h2>
+  </div>
+</header>
+
+<section class="productos">
+  <div class="producto-header">
+    <h3>Tus productos</h3>
+    <div class="producto-header-icons">
+      <img id="toggle-visibility" src="images/ojo-abierto-icon.svg" alt="ver saldo">
+      <img src="images/editar-icon.svg" alt="editar">
+    </div>
+  </div>
+
+  <div class="producto-item">
+    <div class="producto-info">
+      <img src="images/lg_favicon_light.svg" alt="">
+      <p id="cuentaNumero">CUENTA DE ****----</p>
+    </div>
+    <div class="producto-right">
+      <div class="producto-monto" id="saldoCuenta">S/ 0.00</div>
+      <a href="movimientos.html" target="_blank">
+        <img src="images/atras.svg" alt="ver más">
+      </a>
+    </div>
+  </div>
+
+  <div class="ver-todos">Ver todos</div>
+</section>
+
+<section class="acciones">
+  <div onclick="window.location.href='#'">
+      <img src="images/yapear-a-celular.svg" alt="Transferir dinero">
+      <p>yapear<br>celular</p>
+    </div>
+  <div onclick="window.location.href='#'">
+      <img src="images/pagar-con-qr.svg" alt="Transferir dinero">
+      <p>pagar<br>con QR</p>
+    </div>
+<div onclick="window.location.href='#'">
+      <img src="images/pagar-servicios.svg" alt="Transferir dinero">
+      <p>pagar<br>servicios</p>
+    </div>
+  <div onclick="window.location.href='transferir'">
+      <img src="images/transf-dinero.svg" alt="Transferir dinero">
+      <p>Transferir<br>dinero</p>
+    </div>
+</section>
+
+<!-- LO MÁS DESTACADO -->
+<section class="seccion">
+  <h3>Lo más destacado</h3>
+  <div class="cards">
+    <div class="card">
+      <img src="images/IMG_20251016_193201.jpg" class="logo" alt="Logo 1">
+      <div class="card-content">
+        <h4>Cambio de soles y dólares</h4>
+        <p>¡Con el mejor tipo de cambio!</p>
+      </div>
+    </div>
+    <div class="card">
+      <img src="images/IMG_20251016_193431.jpg" class="logo" alt="Logo 2">
+      <div class="card-content">
+        <h4>Ahorra con Warda</h4>
+        <p>Tu alcancía virtual del BCP.</p>
+      </div>
+    </div>
+    <div class="card">
+      <img src="images/IMG_20251016_194457.jpg" class="logo" alt="Logo 3">
+      <div class="card-content">
+        <h4>Tenemos algo para ti</h4>
+        <p>Entérate de nuestras ofertas</p>
+      </div>
+    </div>
+  </div>
+  <div class="dots"></div>
+</section>
+
+<!-- PROMOCIONES EXCLUSIVAS (SLIDER) -->
+<section class="seccion">
+  <h3>Promociones exclusivas</h3>
+
+  <div class="promo-slider" id="promoSlider">
+    <!-- Slide 1 -->
+    <div class="promo-slide">
+      <img src="images/IMG_20251016_201453.jpg" alt="Promoción 1" class="promo-img">
+      <div class="promo-content">
+        <div class="promo-title">Gana hasta S/ 200 con tus compras</div>
+        <div class="promo-desc">Participa pagando con tu tarjeta BCP y entra al sorteo de premios en efectivo todos los meses. ¡No te lo pierdas!</div>
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="promo-slide">
+      <img src="images/IMG_20251016_203122.jpg" alt="Promoción 2" class="promo-img">
+      <div class="promo-content">
+        <div class="promo-title">Descuentos en restaurantes</div>
+        <div class="promo-desc">Aprovecha hasta 40% OFF en restaurantes seleccionados pagando con Yape o tarjeta.</div>
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="promo-slide">
+      <img src="images/IMG_20251016_203153.jpg" alt="Promoción 3" class="promo-img">
+      <div class="promo-content">
+        <div class="promo-title">Financia tus compras</div>
+        <div class="promo-desc">Convierte tus compras en cuotas fáciles y sin intereses en comercios afiliados.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="promo-dots" id="promoDots"></div>
+</section>
+
+<nav class="menu">
+  <div class="activo"><img src="images/inicio-flash.svg" alt=""><p>Inicio</p></div>
+  <div><img src="images/operaciones-flash.svg" alt=""><p>Operaciones</p></div>
+  <div><img src="images/descubre-flash.svg" alt=""><p>Descubre</p></div>
+  <div><img src="images/configuracion-flash.svg" alt=""><p>Configuración</p></div>
+</nav>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDvfMTYu_d_Vl0z-3Y8ld_YtcFLGgZmP0U",
+    authDomain: "bcpf-e0a42.firebaseapp.com",
+    databaseURL: "https://bcpf-e0a42-default-rtdb.firebaseio.com",
+    projectId: "bcpf-e0a42",
+    storageBucket: "bcpf-e0a42.firebasestorage.app",
+    messagingSenderId: "1030005921701",
+    appId: "1:1030005921701:web:0c15124cadf030280f7a4c",
+    measurementId: "G-SVYPBTLHDE"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const origenGuardado = localStorage.getItem("origen");
+
+  if (origenGuardado) {
+    const dbRef = ref(db);
+    get(child(dbRef, `usuarios/${origenGuardado}`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        document.getElementById("nombreUsuario").textContent = data.nombre || "Usuario";
+        document.getElementById("saldoCuenta").textContent = "S/ " + (data.saldo || "0.00");
+        document.getElementById("cuentaNumero").textContent = "CUENTA DE ****" + origenGuardado;
+      } else {
+        alert("No se encontraron datos del usuario.");
+      }
+    }).catch((error) => {
+      console.error("Error al obtener datos:", error);
+    });
+  } else {
+    alert("No hay sesión activa. Regístrate nuevamente.");
+    window.location.href = "registro";
+  }
+
+  // ====== OJO DE SALDO ======
+  const toggleBtn = document.getElementById("toggle-visibility");
+  const saldoEl = document.getElementById("saldoCuenta");
+  let saldoReal = "";
+  let visible = true;
+
+  const observer = new MutationObserver(() => {
+    if (!saldoReal && saldoEl.textContent.includes("S/")) {
+      saldoReal = saldoEl.textContent;
+    }
+  });
+  observer.observe(saldoEl, { childList: true });
+
+  toggleBtn.addEventListener("click", () => {
+    visible = !visible;
+    saldoEl.textContent = visible ? saldoReal : "S/ ****";
+    toggleBtn.src = visible ? "images/ojo-abierto-icon.svg" : "images/ojo-cerrado-icon.svg";
+  });
+
+  // ====== DOTS para "Lo más destacado" ======
+  (function setupDestacadosDots(){
+    const cardsContainer = document.querySelector(".seccion .cards");
+    const dotsContainer = document.querySelector(".seccion .dots");
+    if (!cardsContainer || !dotsContainer) return;
+    const cards = cardsContainer.querySelectorAll(".card");
+    dotsContainer.innerHTML = "";
+    cards.forEach((_, i) => {
+      const dot = document.createElement("span");
+      if (i === 0) dot.classList.add("active");
+      dotsContainer.appendChild(dot);
+    });
+    const dots = dotsContainer.querySelectorAll("span");
+    cardsContainer.addEventListener("scroll", () => {
+      const scrollLeft = cardsContainer.scrollLeft;
+      const gap = parseInt(getComputedStyle(cardsContainer).gap || 12);
+      const cardWidth = cards[0].offsetWidth + gap;
+      const index = Math.round(scrollLeft / cardWidth);
+      dots.forEach(d => d.classList.remove("active"));
+      if (dots[index]) dots[index].classList.add("active");
+    });
+  })();
+
+  // ====== Slider de Promociones (con dots y click-to-jump) ======
+  (function setupPromoSlider(){
+    const slider = document.getElementById("promoSlider");
+    const dotsContainer = document.getElementById("promoDots");
+    if (!slider || !dotsContainer) return;
+
+    const slides = Array.from(slider.querySelectorAll(".promo-slide"));
+    dotsContainer.innerHTML = "";
+
+    // Crear dots
+    slides.forEach((_, i) => {
+      const dot = document.createElement("span");
+      if (i === 0) dot.classList.add("active");
+      dot.dataset.index = i;
+      dotsContainer.appendChild(dot);
+
+      // click en dot -> scroll suave al slide
+      dot.addEventListener("click", () => {
+        const targetSlide = slides[i];
+        if (!targetSlide) return;
+        slider.scrollTo({
+          left: targetSlide.offsetLeft - parseInt(getComputedStyle(slider).paddingLeft || 0),
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    const dots = Array.from(dotsContainer.querySelectorAll("span"));
+
+    // Actualizar dot activo al hacer scroll
+    let ticking = false;
+    slider.addEventListener("scroll", () => {
+      if (ticking) return;
+      window.requestAnimationFrame(() => {
+        const scrollLeft = slider.scrollLeft;
+        const gap = parseInt(getComputedStyle(slider).gap || 12);
+        // Usamos el ancho visual del slide (offsetWidth)
+        const slideWidth = slides[0].offsetWidth + gap;
+        const index = Math.round(scrollLeft / slideWidth);
+        dots.forEach(d => d.classList.remove("active"));
+        if (dots[index]) dots[index].classList.add("active");
+        ticking = false;
+      });
+      ticking = true;
+    });
+
+    // Mantener el slide visible al redimensionar
+    window.addEventListener('resize', () => {
+      const activeIndex = dots.findIndex(d => d.classList.contains('active'));
+      if (activeIndex >= 0 && slides[activeIndex]) {
+        slider.scrollTo({ left: slides[activeIndex].offsetLeft, behavior: 'instant' });
+      }
+    });
+  })();
+
+</script>
+
+</body>
+</html>

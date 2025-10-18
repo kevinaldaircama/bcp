@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Cuentas - Banca Móvil BCP</title>
+<link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0003ff" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="images/png" href="images/app_icon_xxxhdpi.png">  
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Poppins',system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;
+    background:#fff;
+    color:#00246f;
+    min-height:100vh;
+    padding-bottom:72px;
+  }
+
+  header.appbar{
+    background:#0033a0;
+    color:#fff;
+    height:56px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    box-shadow:0 1px 4px rgba(0,0,0,0.1);
+  }
+  header.appbar .back{
+    position:absolute;
+    left:12px;
+    width:36px;
+    height:36px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:none;
+    background:none;
+    cursor:pointer;
+  }
+  header.appbar .back img{
+    width:22px;
+    height:22px;
+    display:block;
+  }
+  header.appbar .title{
+    font-size:17px;
+    font-weight:600;
+    text-align:center;
+  }
+
+  .container{padding:18px}
+
+  .account-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+  }
+  .account-title{font-size:15px;font-weight:700;color:#000;}
+  .account-sub{font-size:13px;color:#7b7b7b;margin-top:6px;line-height:1.3;}
+  .account-actions{display:flex;gap:12px;align-items:center;}
+  .account-actions img{width:20px;height:20px;cursor:pointer}
+
+  .saldo-wrap{
+    text-align:center;
+    margin-top:18px;
+    margin-bottom:10px;
+  }
+  .saldo-wrap .label{font-size:14px;color:#666}
+  .saldo-wrap .amount{
+    font-size:44px;
+    color:#0033a0;
+    font-weight:700;
+    margin-top:6px;
+    letter-spacing:1px;
+  }
+
+  .divider{height:1px;background:#eee;margin:18px 0;}
+
+  .acciones{
+    display:flex;
+    justify-content:center;
+    gap:40px;
+    align-items:flex-start;
+  }
+  .accion{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:8px;
+    min-width:72px;
+  }
+  .accion .btn{
+    width:56px;height:56px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:#ff6600;
+    padding:10px;
+    cursor:pointer;
+  }
+  .accion .btn img{width:26px;height:26px;display:block}
+  .accion p{font-size:12px;color:#00246f;margin:0;line-height:1.15}
+
+  .promo{
+    margin-top:18px;
+    background:#0b57ff;
+    color:#fff;
+    border-radius:12px;
+    padding:14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .promo .text{font-weight:600}
+  .promo small{
+    display:block;
+    font-weight:400;
+    opacity:0.95;
+    margin-top:4px;
+    font-size:13px;
+  }
+  .promo img{width:26px;height:26px;opacity:0.95}
+
+  .movimientos{margin-top:22px}
+  .movimientos-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+  }
+  .movimientos-head h3{color:#0033a0;font-size:16px}
+  .movimientos-head a{color:#ff6600;text-decoration:none;font-weight:600}
+
+  .movimiento-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    padding:8px 0;
+    border-bottom:1px solid #f0f0f0;
+  }
+  .mov-info{font-size:14px;color:#333;}
+  .mov-info .fecha{font-size:12px;color:#777;margin-top:2px;}
+  .mov-monto{
+    font-size:14px;
+    font-weight:600;
+  }
+  .mov-monto.negative{color:#d32f2f;}
+  .mov-monto.positive{color:#2e7d32;}
+
+  nav.bottom-nav{
+    position:fixed;
+    left:0;right:0;bottom:0;
+    height:64px;
+    background:#fff;
+    border-top:1px solid #e6e6e6;
+    display:flex;
+    align-items:center;
+    justify-content:space-around;
+    padding:6px 10px;
+    box-shadow:0 -2px 8px rgba(0,0,0,0.04);
+  }
+  nav.bottom-nav .item{text-align:center;font-size:12px;color:#0033a0}
+  nav.bottom-nav .item img{width:26px;height:26px;display:block;margin:0 auto 4px}
+</style>
+</head>
+<body>
+
+<header class="appbar">
+  <button class="back" onclick="history.back()">
+    <img src="images/atras.svg" alt="Volver">
+  </button>
+  <div class="title">Cuentas</div>
+</header>
+
+<main class="container">
+  <div class="account-head">
+    <div>
+      <div class="account-title">CUENTAS DE AHORRO</div>
+      <div id="numeroCuenta" class="account-sub">Cargando...</div>
+      <div id="cciCuenta" class="account-sub">CCI: Cargando...</div>
+    </div>
+    <div class="account-actions">
+      <img id="editarCuenta" src="images/lapiz-cop.svg" alt="editar" title="Editar">
+      <img id="compartirCuenta" src="images/compartir-cop.svg" alt="compartir" title="Compartir">
+    </div>
+  </div>
+
+  <div class="saldo-wrap">
+    <div class="label">Disponible</div>
+    <div id="saldoCuenta" class="amount">S/ 0.00</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="acciones">
+    <div class="accion" onclick="location.href='transferir'">
+      <div class="btn"><img src="images/transf-dinero.svg" alt="transferir"></div>
+      <p>Transferir<br>dinero</p>
+    </div>
+    <div class="accion" onclick="location.href='pagar-servicios'">
+      <div class="btn"><img src="images/pagar-servicios.svg" alt="pagar"></div>
+      <p>Pagar<br>servicios</p>
+    </div>
+    <div class="accion" onclick="location.href='mas'">
+      <div class="btn"><img src="images/ver-mas-bien.svg" alt="mas"></div>
+      <p>Más</p>
+    </div>
+  </div>
+
+  <div class="promo" onclick="location.href='promociones'">
+    <div>
+      <div class="text">¡Monitorea tus finanzas aquí!</div>
+      <small>Organiza y controla tus gastos.</small>
+    </div>
+    <img src="images/atras.svg" alt="ver">
+  </div>
+
+  <section class="movimientos">
+    <div class="movimientos-head">
+      <h3>Movimientos</h3>
+      <a href="movimientos">Ver más</a>
+    </div>
+    <div id="listaMovimientos"></div>
+  </section>
+</main>
+
+<nav class="bottom-nav">
+  <div class="item"><img src="images/inicio-flash.svg" alt=""><div>Inicio</div></div>
+  <div class="item"><img src="images/operaciones-flash.svg" alt=""><div>Operaciones</div></div>
+  <div class="item"><img src="images/descubre-flash.svg" alt=""><div>Descubre</div></div>
+  <div class="item"><img src="images/configuracion-flash.svg" alt=""><div>Configuración</div></div>
+</nav>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDvfMTYu_d_Vl0z-3Y8ld_YtcFLGgZmP0U",
+    authDomain: "bcpf-e0a42.firebaseapp.com",
+    databaseURL: "https://bcpf-e0a42-default-rtdb.firebaseio.com",
+    projectId: "bcpf-e0a42",
+    storageBucket: "bcpf-e0a42.firebasestorage.app",
+    messagingSenderId: "1030005921701",
+    appId: "1:1030005921701:web:0c15124cadf030280f7a4c"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const origen = localStorage.getItem("origen"); // Usuario registrado previamente
+
+  function formatSol(v){
+    const n = Number(v)||0;
+    return new Intl.NumberFormat("es-PE",{style:"currency",currency:"PEN"}).format(n);
+  }
+
+  if(origen){
+    const dbRef = ref(db);
+    get(child(dbRef,`usuarios/${origen}`)).then(s=>{
+      if(s.exists()){
+        const d=s.val();
+        document.getElementById("saldoCuenta").textContent=formatSol(d.saldo || 0);
+        document.getElementById("numeroCuenta").textContent=d.numero || "No registrado";
+        document.getElementById("cciCuenta").textContent="CCI: "+(d.cci || "No registrado");
+      }
+    });
+
+    // Cargar movimientos
+    get(child(dbRef, `usuarios/${origen}/movimientos`)).then(s => {
+      if (s.exists()) {
+        const lista = document.getElementById("listaMovimientos");
+        lista.innerHTML = "";
+        const movimientos = s.val();
+        Object.values(movimientos).reverse().forEach(m => {
+          const nombreMovimiento = "TRAN_CTAS_TERC_BM";
+          let fechaFormateada = "Hoy";
+          if (m.fecha) {
+            let f = new Date(Number(m.fecha) || m.fecha);
+            if (!isNaN(f)) {
+              const opciones = { day: 'numeric', month: 'long' };
+              fechaFormateada = f.toLocaleDateString('es-ES', opciones).toLowerCase();
+            }
+          }
+          const div = document.createElement("div");
+          div.className = "movimiento-item";
+          div.innerHTML = `
+            <div class="mov-info">
+              <div>${nombreMovimiento}</div>
+              <div class="fecha">${fechaFormateada}</div>
+            </div>
+            <div class="mov-monto ${m.tipo === 'salida' ? 'negative' : 'positive'}">
+              ${m.tipo === 'salida' ? '-' : ''}${formatSol(m.monto || 0)}
+            </div>
+          `;
+          lista.appendChild(div);
+        });
+      }
+    });
+  }
+
+  // Editar y copiar
+  document.getElementById("editarCuenta").onclick = () => {
+    const nuevo = prompt("Nuevo nombre de cuenta:");
+    if(nuevo) document.querySelector(".account-title").textContent = nuevo.toUpperCase();
+  };
+  document.getElementById("compartirCuenta").onclick = async () => {
+    const txt = document.getElementById("numeroCuenta").textContent;
+    await navigator.clipboard.writeText(txt);
+    alert("Número copiado: "+txt);
+  };
+</script>
+
+</body>
+</html>
