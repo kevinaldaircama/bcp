@@ -3,125 +3,49 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Confirmación</title>
+  <title>Confirmación Yape</title>
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#01256f" />
   <link rel="icon" type="images/png" href="images/app_icon_xxxhdpi.png"> 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", Arial, sans-serif; }
-
-    body {
-      background-color: #ffffff;
-      display: flex;
-      justify-content: center;
-    }
-
-    .container {
-      max-width: 400px;
-      width: 100%;
-      min-height: 100vh;
-      background-color: #ffffff;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .header {
-      display: flex;
-      align-items: center;
-      padding: 15px;
-      border-bottom: 1px solid #e6e6e6;
-    }
-
+    body { background-color: #ffffff; display: flex; justify-content: center; }
+    .container { max-width: 400px; width: 100%; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; }
+    .header { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #e6e6e6; }
     .back-arrow { font-size: 22px; cursor: pointer; margin-right: 10px; }
     .header-title { font-size: 18px; font-weight: 500; }
-
     .amount-section { text-align: center; padding: 25px 0; }
     .amount { font-size: 36px; font-weight: 600; color: #1f3f74; }
     .amount-label { color: #999; margin-top: 5px; font-size: 14px; }
-
-    .details {
-      border-top: 1px solid #f0f0f0;
-      border-bottom: 1px solid #f0f0f0;
-      padding: 10px 20px;
-    }
-
+    .details { border-top: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0; padding: 10px 20px; }
     .row { display: flex; justify-content: space-between; padding: 12px 0; }
     .row-label { color: #7f8c8d; font-size: 14px; }
     .row-value { text-align: right; font-size: 14px; color: #000; }
     .row-value .small { display: block; color: #7f8c8d; font-size: 13px; margin-top: 3px; }
-
     .description { padding: 15px 20px; }
-    .description textarea {
-      width: 100%; height: 60px; padding: 10px; font-size: 14px;
-      border: 1px solid #dcdcdc; border-radius: 8px; resize: none; outline: none;
-    }
+    .description textarea { width: 100%; height: 60px; padding: 10px; font-size: 14px; border: 1px solid #dcdcdc; border-radius: 8px; resize: none; outline: none; }
     .description textarea::placeholder { color: #b0b0b0; }
     .char-count { text-align: right; font-size: 12px; color: #999; margin-top: 5px; }
-
     .button-section { padding: 20px; }
-    .confirm-btn {
-      width: 100%; background-color: #ff7f00; color: white; font-size: 16px; font-weight: 500;
-      padding: 14px; border: none; border-radius: 25px; cursor: pointer;
-    }
+    .confirm-btn { width: 100%; background-color: #ff7f00; color: white; font-size: 16px; font-weight: 500; padding: 14px; border: none; border-radius: 25px; cursor: pointer; }
     .confirm-btn:active { background-color: #e66f00; }
-
-    /* MODAL DE CARGA */
-    .loading-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.8);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-    }
-
-    .loader-wrapper {
-      position: relative;
-      width: 100px;
-      height: 100px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .loader-circle {
-      position: absolute;
-      width: 100px;
-      height: 100px;
-      border: 6px solid transparent;
-      border-top: 6px solid #ff7f00;
-      border-radius: 50%;
-      animation: spin 1.2s linear infinite;
-    }
-
-    .loader-logo {
-      width: 50px;
-      height: 50px;
-      z-index: 1;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+    .loading-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 9999; }
+    .loader-wrapper { position: relative; width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; }
+    .loader-circle { position: absolute; width: 100px; height: 100px; border: 6px solid transparent; border-top: 6px solid #ff7f00; border-radius: 50%; animation: spin 1.2s linear infinite; }
+    .loader-logo { width: 50px; height: 50px; z-index: 1; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Header -->
     <div class="header">
       <div class="back-arrow" onclick="window.history.back()">&#8592;</div>
-      <div class="header-title">Confirmación</div>
+      <div class="header-title">Confirmación Yape</div>
     </div>
-
-    <!-- Monto -->
     <div class="amount-section">
       <div class="amount" id="montoFinal">S/ 0.00</div>
       <div class="amount-label">Monto total</div>
     </div>
-
-    <!-- Detalles -->
     <div class="details">
       <div class="row">
         <div class="row-label">Enviado a</div>
@@ -138,20 +62,15 @@
         </div>
       </div>
     </div>
-
-    <!-- Descripción -->
     <div class="description">
       <textarea maxlength="100" placeholder="Descripción del pago (Opcional)"></textarea>
       <div class="char-count">0/100</div>
     </div>
-
-    <!-- Botón -->
     <div class="button-section">
       <button class="confirm-btn" id="btnConfirmar">Confirmar</button>
     </div>
   </div>
 
-  <!-- Modal -->
   <div class="loading-modal" id="loadingModal">
     <div class="loader-wrapper">
       <div class="loader-circle"></div>
@@ -163,21 +82,19 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getDatabase, ref, get, set, update, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDvfMTYu_d_Vl0z-3Y8ld_YtcFLGgZmP0U",
-      authDomain: "bcpf-e0a42.firebaseapp.com",
-      databaseURL: "https://bcpf-e0a42-default-rtdb.firebaseio.com",
-      projectId: "bcpf-e0a42",
-      storageBucket: "bcpf-e0a42.firebasestorage.app",
-      messagingSenderId: "1030005921701",
-      appId: "1:1030005921701:web:0c15124cadf030280f7a4c",
-      measurementId: "G-SVYPBTLHDE"
-    };
-
+  const firebaseConfig = {
+ apiKey: "AIzaSyDvfMTYu_d_Vl0z-3Y8ld_YtcFLGgZmP0U",
+    authDomain: "bcpf-e0a42.firebaseapp.com",
+    databaseURL: "https://bcpf-e0a42-default-rtdb.firebaseio.com",
+    projectId: "bcpf-e0a42",
+    storageBucket: "bcpf-e0a42.firebasestorage.app",
+    messagingSenderId: "1030005921701",
+    appId: "1:1030005921701:web:0c15124cadf030280f7a4c",
+    measurementId: "G-SVYPBTLHDE"
+  };
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // Obtener datos desde localStorage
     const nombreDest = document.getElementById("nombreDestinatario");
     const numeroDest = document.getElementById("numeroDestinatario");
     const cuentaOrigen = document.getElementById("cuentaOrigen");
@@ -187,62 +104,41 @@
     const numero = localStorage.getItem("numero") || "0000";
     const origen = localStorage.getItem("origen") || "0000";
     const monto = parseFloat(localStorage.getItem("montoTransferencia") || "0.00");
-    const destino = localStorage.getItem("destinoCuenta") || "----"; // <--- coincide con enviar.html
-numeroDest.innerHTML = `****${numero.slice(-4)}<br>${destino}`; // ahora mostrará el destino correcto
+    const destino = localStorage.getItem("destinoCuenta") || "----";
 
-    // Mostrar datos
     nombreDest.textContent = nombre;
-    numeroDest.innerHTML = `****${numero.slice(-4)}<br>${destino}`; // <-- actualizado
+    numeroDest.innerHTML = `****${numero.slice(-4)}<br>${destino}`;
     cuentaOrigen.textContent = "****" + origen.slice(-4);
     montoFinal.textContent = `S/ ${monto.toFixed(2)}`;
 
-    // Contador de descripción
     const textarea = document.querySelector("textarea");
     const count = document.querySelector(".char-count");
-    textarea.addEventListener("input", () => {
-      count.textContent = `${textarea.value.length}/100`;
-    });
+    textarea.addEventListener("input", () => { count.textContent = `${textarea.value.length}/100`; });
 
     const btnConfirmar = document.getElementById("btnConfirmar");
     const loadingModal = document.getElementById("loadingModal");
 
     btnConfirmar.addEventListener("click", async () => {
       loadingModal.style.display = "flex";
-
       const numeroOperacion = Math.floor(10000000 + Math.random() * 90000000);
       const fecha = new Date().toLocaleString("es-PE", { dateStyle: "full", timeStyle: "short" });
 
-      // Guardar transacción
+      // Guardar transacción en Yape
       const transRef = ref(db, `TRAN YAPE/${numeroOperacion}`);
-      await set(transRef, {
-        fecha: fecha,
-        monto: monto,
-        cuenta_origen: origen,
-        cuenta_destino: numero,
-        nombre_destinatario: nombre,
-        numero_operacion: numeroOperacion
-      });
+      await set(transRef, { fecha, monto, cuenta_origen: origen, cuenta_destino: numero, nombre_destinatario: nombre, numero_operacion: numeroOperacion });
 
       // Actualizar saldo
       const cuentaRef = ref(db, `usuarios/${origen}`);
       const snapshot = await get(cuentaRef);
       if (snapshot.exists()) {
         const data = snapshot.val();
-        const saldoActual = parseFloat(data.saldo) || 0;
-        const nuevoSaldo = saldoActual - monto;
+        const nuevoSaldo = (parseFloat(data.saldo) || 0) - monto;
         await update(cuentaRef, { saldo: nuevoSaldo });
       }
 
-      // Guardar en historial de movimientos
+      // Guardar en historial de movimientos con nombre fijo
       const movimientosRef = ref(db, `usuarios/${origen}/movimientos`);
-      await push(movimientosRef, {
-        nombre: nombre,
-        destino: numero,
-        monto: monto,
-        fecha: fecha,
-        tipo: "salida",
-        operacion: numeroOperacion
-      });
+      await push(movimientosRef, { nombre: "TRAN_YAPE", destino: numero, monto: monto, fecha: fecha, tipo: "salida", operacion: numeroOperacion });
 
       // Guardar comprobante
       localStorage.setItem("comprobante_monto", monto.toFixed(2));
@@ -251,11 +147,8 @@ numeroDest.innerHTML = `****${numero.slice(-4)}<br>${destino}`; // ahora mostrar
       localStorage.setItem("comprobante_operacion", numeroOperacion.toString());
       localStorage.setItem("comprobante_fecha", fecha);
 
-      setTimeout(() => {
-        loadingModal.style.display = "none";
-        window.location.href = "comprobante";
-      }, 3000);
+      setTimeout(() => { loadingModal.style.display = "none"; window.location.href = "comprobante"; }, 3000);
     });
   </script>
 </body>
-  </html>
+</html>
