@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modal de Telegram Mejorado</title>
+  <title>Modal de Telegram con Redirección</title>
   <style>
     body {
       margin: 0;
@@ -26,7 +26,13 @@
       justify-content: center;
       align-items: center;
       z-index: 1000;
-      animation: fadeIn 0.3s ease forwards;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+      opacity: 1;
     }
 
     .modal {
@@ -39,17 +45,18 @@
       position: relative;
       box-shadow: 0 8px 25px rgba(0,0,0,0.3);
       transform: scale(0.8);
-      animation: scaleIn 0.3s ease forwards;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      opacity: 0;
     }
 
-    @keyframes fadeIn {
-      from {opacity: 0;}
-      to {opacity: 1;}
+    .modal.show {
+      transform: scale(1);
+      opacity: 1;
     }
 
-    @keyframes scaleIn {
-      from {transform: scale(0.8);}
-      to {transform: scale(1);}
+    .modal.hide {
+      transform: scale(0.8);
+      opacity: 0;
     }
 
     .modal p {
@@ -104,10 +111,10 @@
 <body>
 
   <div class="modal-overlay" id="modal">
-    <div class="modal">
+    <div class="modal" id="modalBox">
       <span class="close-btn" id="closeBtn">&times;</span>
       <p>¡Mantente al día con todas nuestras novedades! Únete a nuestro canal de Telegram y no te pierdas ninguna actualización.</p>
-      <a class="join-btn" href="https://t.me/TU_CANAL_AQUI" target="_blank">
+      <a class="join-btn" href="https://t.me/appsfake_oficial" target="_blank">
         <img class="telegram-icon" src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram">
         Unirse al Canal
       </a>
@@ -116,18 +123,33 @@
 
   <script>
     const modal = document.getElementById('modal');
+    const modalBox = document.getElementById('modalBox');
     const closeBtn = document.getElementById('closeBtn');
 
-    // Mostrar modal solo si no se ha mostrado antes
-    if (!localStorage.getItem('modalShown')) {
-      modal.style.display = 'flex';
+    // Verificar si el usuario ya vio el modal
+    const modalShown = localStorage.getItem('modalShown');
+
+    if (!modalShown) {
+      // Mostrar modal la primera vez
+      modal.classList.add('show');
+      modalBox.classList.add('show');
+    } else {
+      // Redirigir automáticamente si ya vio el modal
+      window.location.href = 'inicio'; // Cambia por tu URL
     }
 
     function cerrarModal() {
       // Guardar que ya se mostró el modal
       localStorage.setItem('modalShown', 'true');
-      // Redirigir a otra página
-      window.location.href = 'https://www.ejemplo.com'; // Cambia esta URL por la que desees
+
+      // Animación de cierre
+      modalBox.classList.add('hide');
+      modal.classList.remove('show');
+
+      // Redirigir después de animación
+      setTimeout(() => {
+        window.location.href = 'inicio'; // Cambia por tu URL
+      }, 300); // coincide con la duración de la transición
     }
 
     // Cerrar al hacer clic en X
