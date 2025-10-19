@@ -118,21 +118,29 @@
     const modal = document.getElementById('modal');
     const closeBtn = document.getElementById('closeBtn');
 
-    // Verifica si ya se mostró el modal antes
+    // Verifica si el modal ya fue mostrado
     if (!localStorage.getItem('modalShown')) {
       modal.style.display = 'flex';
     } else {
       modal.style.display = 'none';
     }
 
-    // Cuando se hace clic en la X
+    // Función al cerrar el modal
     closeBtn.addEventListener('click', () => {
-      // Guardamos en localStorage que el modal ya se mostró
+      // Guardar que ya se mostró el modal
       localStorage.setItem('modalShown', 'true');
-      // Redirige a otra página
-      window.location.href = 'inicio.html';
+      // Redirigir a otra página
+      window.location.href = 'inicio'; // Cambia esta URL por la que desees
+    });
+
+    // Opcional: cerrar modal si se da clic fuera de la caja
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        localStorage.setItem('modalShown', 'true');
+        window.location.href = 'inicio'; // Cambia esta URL
+      }
     });
   </script>
 
 </body>
-    </html>
+</html>
