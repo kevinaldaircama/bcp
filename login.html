@@ -191,7 +191,7 @@
         get(child(dbRef, "usuarios/" + origenGuardado)).then((snapshot) => {
           modal.style.display = "none";
           if (snapshot.exists() && snapshot.val().clave === clave) {
-            window.location.href = "inicio";
+            window.location.href = "saludos";
           } else {
             alert("Clave incorrecta o cuenta no encontrada.");
           }
