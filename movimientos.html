@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Cuentas - Banca Móvil BCP</title>
 <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#01256f" />
+<meta name="theme-color" content="#01256f" />
 
-  <!-- Favicon -->
-  <link rel="icon" type="images/png" href="images/app_icon_xxxhdpi.png">  
+<!-- Favicon -->
+<link rel="icon" type="images/png" href="images/app_icon_xxxhdpi.png">
+
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{
@@ -237,83 +238,84 @@
 </nav>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDvfMTYu_d_Vl0z-3Y8ld_YtcFLGgZmP0U",
-    authDomain: "bcpf-e0a42.firebaseapp.com",
-    databaseURL: "https://bcpf-e0a42-default-rtdb.firebaseio.com",
-    projectId: "bcpf-e0a42",
-    storageBucket: "bcpf-e0a42.firebasestorage.app",
-    messagingSenderId: "1030005921701",
-    appId: "1:1030005921701:web:0c15124cadf030280f7a4c"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyDvfMTYu_d_Vl0z-3Y8ld_YtcFLGgZmP0U",
+  authDomain: "bcpf-e0a42.firebaseapp.com",
+  databaseURL: "https://bcpf-e0a42-default-rtdb.firebaseio.com",
+  projectId: "bcpf-e0a42",
+  storageBucket: "bcpf-e0a42.firebasestorage.app",
+  messagingSenderId: "1030005921701",
+  appId: "1:1030005921701:web:0c15124cadf030280f7a4c"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-  const origen = localStorage.getItem("origen"); // Usuario registrado previamente
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const origen = localStorage.getItem("origen");
 
-  function formatSol(v){
-    const n = Number(v)||0;
-    return new Intl.NumberFormat("es-PE",{style:"currency",currency:"PEN"}).format(n);
-  }
+function formatSol(v){
+  return `S/ ${(Number(v)||0).toFixed(2)}`;
+}
 
-  if(origen){
-    const dbRef = ref(db);
-    get(child(dbRef,`usuarios/${origen}`)).then(s=>{
-      if(s.exists()){
-        const d=s.val();
-        document.getElementById("saldoCuenta").textContent=formatSol(d.saldo || 0);
-        document.getElementById("numeroCuenta").textContent=d.numero || "No registrado";
-        document.getElementById("cciCuenta").textContent="CCI: "+(d.cci || "No registrado");
-      }
-    });
+if (origen){
+  const dbRef = ref(db);
 
-    // Cargar movimientos
-    get(child(dbRef, `usuarios/${origen}/movimientos`)).then(s => {
-      if (s.exists()) {
-        const lista = document.getElementById("listaMovimientos");
-        lista.innerHTML = "";
-        const movimientos = s.val();
-        Object.values(movimientos).reverse().forEach(m => {
-          const nombreMovimiento = "TRAN_CTAS_TERC_BM";
-          let fechaFormateada = "Hoy";
-          if (m.fecha) {
-            let f = new Date(Number(m.fecha) || m.fecha);
-            if (!isNaN(f)) {
-              const opciones = { day: 'numeric', month: 'long' };
-              fechaFormateada = f.toLocaleDateString('es-ES', opciones).toLowerCase();
-            }
+  // Datos de la cuenta
+  get(child(dbRef, `usuarios/${origen}`)).then(s=>{
+    if(s.exists()){
+      const d=s.val();
+      document.getElementById("saldoCuenta").textContent=formatSol(d.saldo);
+      document.getElementById("numeroCuenta").textContent=d.numero || "No registrado";
+      document.getElementById("cciCuenta").textContent="CCI: "+(d.cci || "No registrado");
+    }
+  });
+
+  // Movimientos
+  get(child(dbRef, `usuarios/${origen}/movimientos`)).then(s=>{
+    if(s.exists()){
+      const lista = document.getElementById("listaMovimientos");
+      lista.innerHTML = "";
+      const movimientos = s.val();
+      Object.values(movimientos).reverse().forEach(m=>{
+        const nombreMovimiento = m.nombre || "Movimiento";
+        let fechaFormateada = "Hoy";
+        if(m.fecha){
+          let f = new Date(m.fecha);
+          if(!isNaN(f)){
+            const opciones = { day:'numeric', month:'long' };
+            fechaFormateada = f.toLocaleDateString('es-ES',opciones).toLowerCase();
           }
-          const div = document.createElement("div");
-          div.className = "movimiento-item";
-          div.innerHTML = `
-            <div class="mov-info">
-              <div>${nombreMovimiento}</div>
-              <div class="fecha">${fechaFormateada}</div>
-            </div>
-            <div class="mov-monto ${m.tipo === 'salida' ? 'negative' : 'positive'}">
-              ${m.tipo === 'salida' ? '-' : ''}${formatSol(m.monto || 0)}
-            </div>
-          `;
-          lista.appendChild(div);
-        });
-      }
-    });
-  }
+        }
+        const div = document.createElement("div");
+        div.className = "movimiento-item";
+        div.innerHTML = `
+          <div class="mov-info">
+            <div>${nombreMovimiento}</div>
+            <div class="fecha">${fechaFormateada}</div>
+          </div>
+          <div class="mov-monto ${m.tipo==='salida'?'negative':'positive'}">
+            ${m.tipo==='salida'?'-':''}${formatSol(m.monto)}
+          </div>
+        `;
+        lista.appendChild(div);
+      });
+    }
+  });
+}
 
-  // Editar y copiar
-  document.getElementById("editarCuenta").onclick = () => {
-    const nuevo = prompt("Nuevo nombre de cuenta:");
-    if(nuevo) document.querySelector(".account-title").textContent = nuevo.toUpperCase();
-  };
-  document.getElementById("compartirCuenta").onclick = async () => {
-    const txt = document.getElementById("numeroCuenta").textContent;
-    await navigator.clipboard.writeText(txt);
-    alert("Número copiado: "+txt);
-  };
+// Editar y copiar
+document.getElementById("editarCuenta").onclick = () => {
+  const nuevo = prompt("Nuevo nombre de cuenta:");
+  if(nuevo) document.querySelector(".account-title").textContent = nuevo.toUpperCase();
+};
+document.getElementById("compartirCuenta").onclick = async () => {
+  const txt = document.getElementById("numeroCuenta").textContent;
+  await navigator.clipboard.writeText(txt);
+  alert("Número copiado: "+txt);
+};
 </script>
 
 </body>
-</html>
+                             </html>
