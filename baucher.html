@@ -10,146 +10,27 @@
   <!-- Favicon -->
   <link rel="icon" type="images/png" href="images/app_icon_xxxhdpi.png"> 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
-    body {
-      background-color: #ffffff;
-      color: #333;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background-color: #ffffff; color: #333; }
 
-    .container {
-      max-width: 400px;
-      margin: 0 auto;
-      background-color: #ffffff;
-      text-align: center;
-      padding-top: 25px;
-    }
-
-    .logo {
-      width: 90px;
-      margin: 0 auto 15px;
-      display: block;
-    }
-
-    .title {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 8px;
-      color: #333;
-    }
-
-    .amount {
-      font-size: 32px;
-      font-weight: 600;
-      color: #004b93;
-      margin-bottom: 10px;
-    }
-
-    .date {
-      font-size: 14px;
-      color: #777;
-      margin-bottom: 20px;
-    }
-
-    .actions {
-      display: flex;
-      justify-content: center;
-      gap: 60px;
-      margin-bottom: 20px;
-    }
-
-    .action {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: #ff7b00;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .action img {
-      width: 24px;
-      height: 24px;
-      margin-bottom: 5px;
-    }
-
-    .details {
-      text-align: left;
-      padding: 15px;
-      font-size: 14px;
-      background-color: #ffffff;
-    }
-
-    .row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 10px;
-    }
-
-    .row strong {
-      font-weight: bold;
-    }
-
-    .right-text {
-      text-align: right;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-    }
-
-    .divider {
-      border-top: 1px solid #ddd;
-      margin: 10px 0;
-    }
-
-    .banner {
-      width: 95%;
-      margin: 15px auto;
-      text-align: center;
-    }
-
-    .banner img {
-      width: 100%;
-      max-width: 380px;
-      border-radius: 8px;
-      display: block;
-      margin: 0 auto;
-    }
-
-    .button {
-      background-color: #ff7b00;
-      color: #fff;
-      border: none;
-      border-radius: 25px;
-      font-size: 16px;
-      font-weight: bold;
-      padding: 12px 20px;
-      width: 90%;
-      max-width: 400px;
-      margin: 10px auto 10px auto;
-      display: block;
-      cursor: pointer;
-      text-decoration: none;
-      text-align: center;
-    }
-
-    .link-inicio {
-      display: block;
-      text-align: center;
-      margin-top: 8px;
-      font-size: 14px;
-      color: #004b93;
-      text-decoration: none;
-    }
-
-    .link-inicio:hover {
-      text-decoration: underline;
-    }
+    .container { max-width: 400px; margin: 0 auto; background-color: #ffffff; text-align: center; padding-top: 25px; }
+    .logo { width: 90px; margin: 0 auto 15px; display: block; }
+    .title { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: #333; }
+    .amount { font-size: 32px; font-weight: 600; color: #004b93; margin-bottom: 10px; }
+    .date { font-size: 14px; color: #777; margin-bottom: 20px; }
+    .actions { display: flex; justify-content: center; gap: 60px; margin-bottom: 20px; }
+    .action { display: flex; flex-direction: column; align-items: center; color: #ff7b00; font-size: 14px; cursor: pointer; }
+    .action img { width: 24px; height: 24px; margin-bottom: 5px; }
+    .details { text-align: left; padding: 15px; font-size: 14px; background-color: #ffffff; }
+    .row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .row strong { font-weight: bold; }
+    .right-text { text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
+    .divider { border-top: 1px solid #ddd; margin: 10px 0; }
+    .banner { width: 95%; margin: 15px auto; text-align: center; }
+    .banner img { width: 100%; max-width: 380px; border-radius: 8px; display: block; margin: 0 auto; }
+    .button { background-color: #ff7b00; color: #fff; border: none; border-radius: 25px; font-size: 16px; font-weight: bold; padding: 12px 20px; width: 90%; max-width: 400px; margin: 10px auto 10px auto; display: block; cursor: pointer; text-decoration: none; text-align: center; }
+    .link-inicio { display: block; text-align: center; margin-top: 8px; font-size: 14px; color: #004b93; text-decoration: none; }
+    .link-inicio:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -178,7 +59,7 @@
       <div class="right-text">
         <span id="comprobante-nombre">—</span>
         <span id="comprobante-cuenta">****</span>
-        <span>Moneda soles</span>
+        <span>Destino</span>
       </div>
     </div>
 
@@ -188,7 +69,7 @@
       <strong>Desde</strong>
       <div class="right-text">
         <span>Cuenta Digital Soles</span>
-        <span>****9366</span>
+        <span id="cuenta-origen">****</span>
       </div>
     </div>
 
@@ -217,19 +98,11 @@
     // 🕒 Fecha y hora actual
     const fechaElemento = document.getElementById('fecha-actual');
     const ahora = new Date();
-    const opcionesFecha = {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    };
-
+    const opcionesFecha = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
     let horas = ahora.getHours();
     const minutos = ahora.getMinutes().toString().padStart(2, '0');
     const ampm = horas >= 12 ? 'pm' : 'am';
-    horas = horas % 12;
-    horas = horas ? horas : 12;
-
+    horas = horas % 12 || 12;
     const fechaFormateada = ahora.toLocaleDateString('es-ES', opcionesFecha);
     fechaElemento.textContent = `${fechaFormateada} - ${horas}:${minutos} ${ampm}`;
 
@@ -237,12 +110,17 @@
     const monto = localStorage.getItem('comprobante_monto') || "0.00";
     const destinatario = localStorage.getItem('comprobante_destinatario') || "—";
     const cuenta = localStorage.getItem('comprobante_cuenta') || "****";
-    const operacion = localStorage.getItem('comprobante_operacion') || "00000000";
+    const origen = localStorage.getItem('origen') || "****"; // número de cuenta de origen
 
+    // Generar número de operación aleatorio de 8 dígitos
+    const numeroOperacion = Math.floor(10000000 + Math.random() * 90000000);
+
+    // Mostrar datos en el comprobante
     document.getElementById('comprobante-monto').textContent = `S/ ${parseFloat(monto).toFixed(2)}`;
     document.getElementById('comprobante-nombre').textContent = destinatario;
     document.getElementById('comprobante-cuenta').textContent = cuenta;
-    document.getElementById('comprobante-operacion').textContent = operacion;
+    document.getElementById('cuenta-origen').textContent = origen;
+    document.getElementById('comprobante-operacion').textContent = numeroOperacion;
   </script>
 </body>
 </html>
