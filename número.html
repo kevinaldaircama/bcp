@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Agregar contacto</title>
+  <link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#01256f" />
+<link rel="icon" type="images/png" href="images/app_icon_xxxhdpi.png"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background-color: #fff;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      background-color: #fff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      flex: 1;
+      font-size: 18px;
+      margin: 0;
+      text-align: center;
+    }
+
+    header a {
+      text-decoration: none;
+      color: black;
+      font-size: 20px;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    input[type="text"], input[type="tel"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .destino-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .destino-container span {
+      font-size: 14px;
+    }
+
+    .destino-container button {
+      background: none;
+      border: none;
+      color: #007bff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .alerta {
+      margin-top: 15px;
+      font-size: 12px;
+      color: #555;
+      line-height: 1.4;
+    }
+
+    .guardar-btn {
+      width: 100%;
+      background-color: #ff6a00;
+      color: #fff;
+      border: none;
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 5px;
+      margin-top: 25px;
+      cursor: pointer;
+    }
+
+    .guardar-btn:hover {
+      background-color: #e55e00;
+    }
+
+    /* ===== Modal ===== */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 300px;
+      text-align: center;
+      animation: aparecer 0.3s ease;
+    }
+
+    .modal-content h2 {
+      margin-top: 0;
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    .opciones button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      background-color: #f2f2f2;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .opciones button:hover {
+      background-color: #ddd;
+    }
+
+    .cerrar-modal {
+      margin-top: 10px;
+      background: none;
+      border: none;
+      color: #007bff;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    @keyframes aparecer {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* ===== Modal de confirmación ===== */
+    .modal-confirmacion .modal-content {
+      max-width: 320px;
+    }
+
+    .datos-guardados {
+      text-align: left;
+      font-size: 14px;
+      background: #f8f8f8;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="javascript:history.back()">←</a>
+    <h1>Agregar contacto</h1>
+    <a href="#">✕</a>
+  </header>
+
+  <div class="container">
+    <label for="nombre">Nombre</label>
+    <input type="text" id="nombre" placeholder="Ingresa nombres">
+
+    <label for="numero">Número</label>
+    <input type="tel" id="numero" placeholder="Ingresa número">
+
+    <label>Destino</label>
+    <div class="destino-container">
+      <span id="destino-texto">Yape</span>
+      <button type="button" id="btn-cambiar">CAMBIAR</button>
+    </div>
+
+    <p class="alerta">
+      Recuerda que el uso incorrecto de este apartado puede traer como consecuencia el baneo permanente en la aplicación sin derecho a reclamo.
+    </p>
+
+    <button class="guardar-btn" id="guardar">GUARDAR</button>
+  </div>
+
+  <!-- Modal Seleccionar destino -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <h2>Selecciona destino</h2>
+      <div class="opciones">
+        <button data-opcion="Yape">Yape</button>
+        <button data-opcion="Plin">Plin</button>
+        <button data-opcion="BIM">BIM</button>
+        <button data-opcion="BCP">BCP</button>
+        <button data-opcion="Ágora / Oh!">Ágora / Oh!</button>
+        <button data-opcion="Banco Falabella">Banco Falabella</button>
+        <button data-opcion="Cmac Arequipa">Cmac Arequipa</button>
+        <button data-opcion="BBVA Perú">BBVA Perú</button>
+        <button data-opcion="Compartamos Financiera">Compartamos Financiera</button>
+      </div>
+      <button class="cerrar-modal" id="cerrar-modal">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- Modal de confirmación -->
+  <div class="modal modal-confirmacion" id="modal-confirmacion">
+    <div class="modal-content">
+      <h2>✅ Datos guardados</h2>
+      <div class="datos-guardados" id="datos-guardados"></div>
+      <button class="cerrar-modal" id="cerrar-confirmacion">Cerrar</button>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+  <script>
+    // 🔥 Configura aquí tu Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDvfMTYu_d_Vl0z-3Y8ld_YtcFLGgZmP0U",
+    authDomain: "bcpf-e0a42.firebaseapp.com",
+    databaseURL: "https://bcpf-e0a42-default-rtdb.firebaseio.com",
+    projectId: "bcpf-e0a42",
+    storageBucket: "bcpf-e0a42.firebasestorage.app",
+    messagingSenderId: "1030005921701",
+    appId: "1:1030005921701:web:0c15124cadf030280f7a4c",
+    measurementId: "G-SVYPBTLHDE"
+  };
+
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    const btnCambiar = document.getElementById('btn-cambiar');
+    const modal = document.getElementById('modal');
+    const cerrarModal = document.getElementById('cerrar-modal');
+    const destinoTexto = document.getElementById('destino-texto');
+    const guardarBtn = document.getElementById('guardar');
+
+    const modalConfirmacion = document.getElementById('modal-confirmacion');
+    const cerrarConfirmacion = document.getElementById('cerrar-confirmacion');
+    const datosGuardadosDiv = document.getElementById('datos-guardados');
+
+    // Modal seleccionar destino
+    btnCambiar.addEventListener('click', () => modal.style.display = 'flex');
+    cerrarModal.addEventListener('click', () => modal.style.display = 'none');
+    modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+
+    document.querySelectorAll('.opciones button').forEach(boton => {
+      boton.addEventListener('click', () => {
+        destinoTexto.textContent = boton.getAttribute('data-opcion');
+        modal.style.display = 'none';
+      });
+    });
+
+    // Guardar en Firebase + mostrar modal
+    guardarBtn.addEventListener('click', () => {
+      const nombre = document.getElementById('nombre').value.trim();
+      const numero = document.getElementById('numero').value.trim();
+      const destino = destinoTexto.textContent;
+
+      if (nombre === '' || numero === '') {
+        alert('Por favor completa todos los campos.');
+        return;
+      }
+
+      const ref = database.ref('contactos').push();
+      ref.set({
+        nombre,
+        numero,
+        destino,
+        fecha: new Date().toISOString()
+      }).then(() => {
+        // Limpiar campos
+        document.getElementById('nombre').value = '';
+        document.getElementById('numero').value = '';
+        destinoTexto.textContent = 'Yape';
+
+        // Mostrar modal de confirmación con datos
+        datosGuardadosDiv.innerHTML = `
+          <strong>Nombre:</strong> ${nombre}<br>
+          <strong>Número:</strong> ${numero}<br>
+          <strong>Destino:</strong> ${destino}
+        `;
+        modalConfirmacion.style.display = 'flex';
+      }).catch(err => {
+        console.error(err);
+        alert('❌ Error al guardar los datos');
+      });
+    });
+
+    // Cerrar modal confirmación
+    cerrarConfirmacion.addEventListener('click', () => {
+      modalConfirmacion.style.display = 'none';
+    });
+    modalConfirmacion.addEventListener('click', (e) => {
+      if (e.target === modalConfirmacion) modalConfirmacion.style.display = 'none';
+    });
+  </script>
+
+</body>
+</html>
