@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enviar a</title>
+  <link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#01256f" />
+<link rel="icon" type="images/png" href="images/app_icon_xxxhdpi.png"> 
+  <style>
+    * { box-sizing: border-box; font-family: 'Arial', sans-serif; }
+    body { margin: 0; background: #fff; }
+
+    .title-bar {
+      background-color: #fff;
+      text-align: left;
+      padding: 15px 20px;
+      font-size: 18px;
+      font-weight: 500;
+      color: #333;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #f5f5f5;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 30px;
+      font-size: 16px;
+      border: none;
+      border-radius: 30px;
+      background-color: #e0e0e0;
+      color: #fff;
+      cursor: not-allowed;
+      transition: background-color 0.3s;
+    }
+
+    button.enabled {
+      background-color: #ff6600;
+      cursor: pointer;
+    }
+
+    /* Modal de carga */
+    .modal-carga {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    /* Círculo giratorio */
+    .loader {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .loader::before {
+      content: '';
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border: 6px solid #fff;
+      border-top: 6px solid #ff6600;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    /* Logo fijo */
+    .loader img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      z-index: 1;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="title-bar">Enviar a</div>
+
+  <div class="container">
+    <input type="number" id="numero" placeholder="Ingrese número">
+    <button id="continuar" disabled>Continuar</button>
+  </div>
+
+  <!-- Modal de carga -->
+  <div class="modal-carga" id="modal-carga">
+    <div class="loader">
+      <img src="images/lg_favicon_light.svg" alt="Logo">
+    </div>
+  </div>
+
+  <script>
+    const numeroInput = document.getElementById('numero');
+    const continuarBtn = document.getElementById('continuar');
+    const modalCarga = document.getElementById('modal-carga');
+
+    numeroInput.addEventListener('input', () => {
+      if (numeroInput.value.trim() !== '') {
+        continuarBtn.classList.add('enabled');
+        continuarBtn.disabled = false;
+      } else {
+        continuarBtn.classList.remove('enabled');
+        continuarBtn.disabled = true;
+      }
+    });
+
+    continuarBtn.addEventListener('click', () => {
+      localStorage.setItem('numeroEnvio', numeroInput.value.trim());
+      modalCarga.style.display = 'flex';
+
+      setTimeout(() => {
+        window.location.href = 'envia.html'; // redirige a la siguiente página
+      }, 3000);
+    });
+  </script>
+
+</body>
+</html>
