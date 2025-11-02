@@ -1,9 +1,9 @@
 {
   "name": "banca móvil BCP",
-  "short_name": "BCP",
+  "short_name": " banca móvil BCP",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#720e9e",
+  "background_color": "#01256f",
   "theme_color": "#01256f",
   "orientation": "portrait",
   "icons": [
