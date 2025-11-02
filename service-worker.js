@@ -1,4 +1,4 @@
-const CACHE_NAME = 'yape peru_v1';
+const CACHE_NAME = 'banca móvil BCP_v3';
 const urlsToCache = [
   '/',
   '/index.html',
